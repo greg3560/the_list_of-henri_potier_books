@@ -1,13 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App.js";
-import { Provider } from 'react-redux';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from '../src/App';
+import reducer from "../src/reducers";
 import { createStore, applyMiddleware, compose } from 'redux';
+import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
-import reducer from './reducers';
-
-/* Redux DevTools Extension */
 const composeEnhancers =
     typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
@@ -20,17 +18,20 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers(
     applyMiddleware(thunk) // allow creator actions that will return a function.
-                            // this function may create a delay before dispatching an action
+    // this function may create a delay before dispatching an action
 );
 
-// creation of the store redux
 const store = createStore(reducer, enhancer);
 
+let jsdom = require('mocha-jsdom');
 
-// display of the React element or its update
-ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.getElementById('root'),
-);
+jsdom({
+    url: "http://localhost"
+});
+
+it('renders without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(<Provider store={store}>
+        <App/>
+    </Provider>, div);
+});

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {withStyles} from '@material-ui/styles';
-import BallSpinner from './icon/BallSpinner';
+import ShowBook from './containers/ShowBooks';
 
 const styles = {
     root: {
@@ -9,16 +9,12 @@ const styles = {
 };
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <h1>Hello world!</h1>
-                <BallSpinner/>
+                    <ShowBook />
             </div>
         );
     }
