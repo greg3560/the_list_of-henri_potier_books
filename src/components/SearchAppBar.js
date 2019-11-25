@@ -7,6 +7,33 @@ import InputBase from '@material-ui/core/InputBase';
 import {fade, withStyles} from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import Autosuggest from 'react-autosuggest';
+import './styles/SearchAppBar.css';
+import {Link} from "react-router-dom";
+import * as url from '../constants/App';
+
+// tableau contenant les suggestions
+const dataAutoComplete = [];
+
+// Teach Autosuggest how to calculate suggestions for any given input value.
+const getSuggestions = value => {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+
+    return inputLength === 0 ? [] : dataAutoComplete.filter(lang =>
+        lang.title.toLowerCase().slice(0, inputLength) === inputValue
+    );
+};
+
+// When suggestion is clicked, Autosuggest needs to populate the input
+// based on the clicked suggestion. Teach Autosuggest how to calculate the
+// input value for every given suggestion.
+const getSuggestionValue = suggestion => suggestion.title;
+
+// Use your imagination to render suggestions.
+const renderSuggestion = ({isbn, title}) => (
+    <Link to={url.ROUTE_BOOK + isbn}>{title}</Link>
+);
 
 const styles = theme => ({
     root: {
@@ -49,6 +76,14 @@ const styles = theme => ({
         color: 'inherit',
     },
     inputInput: {
+        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+        fontSize: '1rem',
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        color: '#fff',
+        border: 'none',
         padding: theme.spacing(1, 1, 1, 7),
         transition: theme.transitions.create('width'),
         width: '100%',
@@ -63,10 +98,64 @@ const styles = theme => ({
 
 
 class SearchAppBar extends React.Component {
+    constructor() {
+        super();
 
+        // Autosuggest is a controlled component.
+        // This means that you need to provide an input value
+        // and an onChange handler that updates this value (see below).
+        // Suggestions also need to be provided to the Autosuggest,
+        // and they are initially empty because the Autosuggest is closed.
+        this.state = {
+            value: '',
+            suggestions: []
+        };
+    }
+
+    onChange = (event, { newValue }) => {
+        this.setState({
+            value: newValue
+        });
+    };
+
+    // Autosuggest will call this function every time you need to update suggestions.
+    // You already implemented this logic above, so just use it.
+    onSuggestionsFetchRequested = ({ value }) => {
+        this.setState({
+            suggestions: getSuggestions(value)
+        });
+    };
+
+    // Autosuggest will call this function every time you need to clear suggestions.
+    onSuggestionsClearRequested = () => {
+        this.setState({
+            suggestions: []
+        });
+    };
 
     render() {
         const {classes} = this.props;
+        const { value, suggestions } = this.state;
+
+        this.props.data.map((item, index) => {
+            console.log('item', item);
+            let isInArray = false;
+            for (let data in dataAutoComplete[index]) {
+                if (data === 'title') {
+                    if (dataAutoComplete[index][data] === item.title) isInArray = true;
+                }
+            }
+            if (!isInArray) dataAutoComplete.push(item);
+            return '';
+        });
+
+        // Autosuggest will pass through all these props to the input.
+        const inputProps = {
+            placeholder: 'Search…',
+            value,
+            onChange: this.onChange,
+            'aria-label': 'search'
+        };
         return (
             <div className={classes.root}>
                 <AppBar position="static">
@@ -86,13 +175,17 @@ class SearchAppBar extends React.Component {
                             <div className={classes.searchIcon}>
                                 <SearchIcon/>
                             </div>
-                            <InputBase
-                                placeholder="Search…"
-                                classes={{
+                            <Autosuggest
+                                suggestions={suggestions}
+                                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                                getSuggestionValue={getSuggestionValue}
+                                renderSuggestion={renderSuggestion}
+                                inputProps={inputProps}
+                                theme={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
-                                inputProps={{'aria-label': 'search'}}
                             />
                         </div>
                     </Toolbar>

@@ -15,7 +15,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import {BrowserRouter as Router, Link} from "react-router-dom";
+import {Link} from "react-router-dom";
+import * as url from '../constants/App';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -71,7 +72,7 @@ export default function BookCard(book) {
                 title="Paella dish"
             />
             <CardContent>
-                <Link to={"/book/" + isbn}>Fiche détaillé</Link>
+                <Link to={url.ROUTE_BOOK + isbn}>Fiche détaillé</Link>
             </CardContent>
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">

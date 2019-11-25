@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Link} from "react-router-dom";
 import {Route, Switch, useParams} from "react-router";
 import {withStyles} from '@material-ui/styles';
 import component from './containers/ShowBooks';
+import * as url from './constants/App';
 
 const styles = {
     root: {
@@ -22,13 +23,13 @@ class App extends Component {
                         <nav>
                             <ul>
                                 <li>
-                                    <Link to="/">Accueil</Link>
+                                    <Link to={url.BASE_URL}>Accueil</Link>
                                 </li>
                                 <li>
-                                    <Link to="/books">Voir les livres</Link>
+                                    <Link to={url.ROUTE_BOOKS}>Voir les livres</Link>
                                 </li>
                                 <li>
-                                    <Link to="/basket">Panier</Link>
+                                    <Link to={url.ROUTE_BASKET}>Panier</Link>
                                 </li>
                                 <li>
                                     <Link to="/book/23">book23</Link>
