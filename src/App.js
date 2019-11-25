@@ -1,12 +1,15 @@
 import React, {Component} from "react";
+import {BrowserRouter as Router, Link} from "react-router-dom";
+import {Route, Switch, useParams} from "react-router";
 import {withStyles} from '@material-ui/styles';
 import component from './containers/ShowBooks';
 
 const styles = {
     root: {
-        background: 'red'
+
     },
 };
+
 
 class App extends Component {
 
@@ -14,10 +17,60 @@ class App extends Component {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                <component.SearchAppBar/>
-                <component.BookList/>
+                <Router>
+                    <div>
+                        <nav>
+                            <ul>
+                                <li>
+                                    <Link to="/">Accueil</Link>
+                                </li>
+                                <li>
+                                    <Link to="/books">Voir les livres</Link>
+                                </li>
+                                <li>
+                                    <Link to="/basket">Panier</Link>
+                                </li>
+                                <li>
+                                    <Link to="/book/23">book23</Link>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+                        <Switch>
+                            <Route path={"/books"}>
+                                <div>
+                                    <h1>books</h1>
+                                </div>
+                            </Route>
+                            <Route path={"/book/:id"} component={DetailsPage}/>
+                            <Route path={"/basket"}>
+                                <div>
+                                    <h1>basket</h1>
+                                </div>
+                            </Route>
+                            <Route path={"/"}>
+                                <div>
+                                    <component.SearchAppBar/>
+                                    <component.BookList/>
+                                </div>
+                            </Route>
+                        </Switch>
+                    </div>
+                </Router>
             </div>
         );
+    }
+}
+
+class DetailsPage extends Component {
+    render() {
+        return (
+            <div>
+                <h2>{this.props.match.params.id}</h2>
+            </div>
+        )
     }
 }
 

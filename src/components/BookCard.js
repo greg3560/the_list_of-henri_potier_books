@@ -15,6 +15,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {BrowserRouter as Router, Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BookCard(book) {
-    const {title, cover, synopsis, price} = book.item;
+    const {isbn, title, cover, synopsis, price} = book.item;
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
 
@@ -70,7 +71,7 @@ export default function BookCard(book) {
                 title="Paella dish"
             />
             <CardContent>
-                <a href="#" >View</a>
+                <Link to={"/book/" + isbn}>Fiche détaillé</Link>
             </CardContent>
             <CardActions disableSpacing>
                 <IconButton aria-label="add to favorites">
