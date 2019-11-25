@@ -44,7 +44,7 @@ export const fetchBooks = () => {
                 return response.data;
             })
             .then((books) => {
-                dispatch(requestAPISuccess(books.data));
+                dispatch(requestAPISuccess(books));
             })
             .catch((error) => {
                 console.log(error);

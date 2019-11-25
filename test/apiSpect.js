@@ -10,9 +10,10 @@ describe('/GET book', () => {
         chai.request(configAPI.API_URI)
             .get(configAPI.END_POINT)
             .end((err, res) => {
+                // console.log('res', res);
                 res.should.have.status(200);
-                res.body.data.should.be.a('array');
-                res.body.data.length.should.be.eql(20);
+                res.body.should.be.a('array');
+                res.body.length.should.be.eql(7);
                 done();
             });
     });

@@ -25,6 +25,8 @@ const store = createStore(reducer, enhancer);
 
 let jsdom = require('mocha-jsdom');
 
+global.HTMLInputElement = () => {};
+
 jsdom({
     url: "http://localhost"
 });

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {withStyles} from '@material-ui/styles';
-import ShowBook from './containers/ShowBooks';
+import component from './containers/ShowBooks';
 
 const styles = {
     root: {
@@ -14,7 +14,8 @@ class App extends Component {
         const {classes} = this.props;
         return (
             <div className={classes.root}>
-                    <ShowBook />
+                <component.SearchAppBar/>
+                <component.BookList/>
             </div>
         );
     }

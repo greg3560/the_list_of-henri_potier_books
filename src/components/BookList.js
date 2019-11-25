@@ -1,4 +1,5 @@
 import React from 'react';
+import BookCard from './BookCard';
 
 class BookList extends React.Component {
     constructor(props) {
@@ -9,7 +10,12 @@ class BookList extends React.Component {
     render() {
         return (
             <div>
-                {console.log('this.props', this.props)}
+                {this.props.data.map((item, index) => {
+                    return <BookCard
+                        key={index}
+                        item={item}
+                    />
+                })}
             </div>
         );
     }

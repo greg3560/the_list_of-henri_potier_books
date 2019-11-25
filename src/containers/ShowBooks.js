@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as BookActions from '../actions/RequestAPIAction';
+import SearchAppBar from '../components/SearchAppBar';
 import BookList from '../components/BookList';
 
 // apply the action to the UI
@@ -25,9 +26,8 @@ const mapDispatchToProps = (dispatch) => ({
     connection to the redux store.
     update UI with dispatch action
  */
-const ShowBook = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(BookList);
 
-export default ShowBook;
+export default {
+    BookList: connect(mapStateToProps, mapDispatchToProps)(BookList),
+    SearchAppBar: connect(mapStateToProps, mapDispatchToProps)(SearchAppBar)
+}
