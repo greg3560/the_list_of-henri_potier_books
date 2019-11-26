@@ -7,6 +7,12 @@ class BookList extends React.Component {
         this.props.actions.fetchBooks();
     };
 
+    handleClickBasket = (e, basketChecked) => { // toggle add/delete item
+        let isbn = e.currentTarget.getAttribute("isbn");
+        if (basketChecked) this.props.basket.deleteBasket(isbn);
+        else this.props.basket.addBasket(isbn);
+    };
+
     render() {
         return (
             <div>
@@ -14,6 +20,8 @@ class BookList extends React.Component {
                     return <BookCard
                         key={index}
                         item={item}
+                        handleClickBasket={this.handleClickBasket}
+                        basketList={this.props.basketList}
                     />
                 })}
             </div>

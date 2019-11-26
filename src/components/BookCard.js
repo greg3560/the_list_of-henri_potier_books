@@ -11,12 +11,12 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import {red} from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Link} from "react-router-dom";
 import * as url from '../constants/App';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -42,13 +42,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BookCard(book) {
+    const [expanded, setExpanded] = React.useState(false);
+    const [basketChecked, setBasketChecked] = React.useState(false);
     const {isbn, title, cover, synopsis, price} = book.item;
     const classes = useStyles();
-    const [expanded, setExpanded] = React.useState(false);
-
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+
+    const toggleBasket =(e) => {
+        book.handleClickBasket(e, basketChecked);
+        setBasketChecked(!basketChecked);
+    };
+
     return (
 
         <Card className={classes.card}>
@@ -75,8 +81,8 @@ export default function BookCard(book) {
                 <Link to={url.ROUTE_BOOK + isbn}>Fiche détaillé</Link>
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon/>
+                <IconButton aria-label="add to favorites" isbn={isbn} onClick={toggleBasket}>
+                    {basketChecked ? <AddShoppingCartIcon color="primary" /> : <AddShoppingCartIcon />}
                 </IconButton>
                 <IconButton aria-label="share">
                     <ShareIcon/>

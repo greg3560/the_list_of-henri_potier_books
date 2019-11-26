@@ -1,4 +1,4 @@
-input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+input::placeholder {
     color: #deddff;
     opacity: 1; /* Firefox */
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;

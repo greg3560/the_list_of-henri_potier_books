@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
 
 import api from './api'
+import basket from './basket'
 
 const rootReducer = combineReducers({
-    api
+    api,
+    basket
 });
 
 export default rootReducer;
