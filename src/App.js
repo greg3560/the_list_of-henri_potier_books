@@ -49,8 +49,6 @@ class App extends Component {
     render() {
 
         const {classes} = this.props;
-        // console.log('this.props', this.props);
-        // let history = useHistory();
         return (
             <div className={classes.root}>
                 <div>

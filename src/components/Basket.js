@@ -6,15 +6,17 @@ class BookList extends React.Component {
     constructor(props) {
         super(props);
         props.actions.fetchBooks();
+        props.offersActions.fetchOffers(props.basketList);
+
     }
 
     render() {
-        let results = [...this.props.data].filter(book => {
+        let bookInBasket = this.props.data.filter(book => {
             return this.props.basketList.indexOf(book.isbn) !== -1;
         });
         return (
             <div>
-                <SpanningTable items={results} />
+                <SpanningTable bookInBasket={bookInBasket} offer={this.props.dataOffers} />
             </div>
         );
     }

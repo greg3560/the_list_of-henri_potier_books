@@ -49,6 +49,6 @@ export const fetchBooks = () => {
             .catch((error) => {
                 console.log(error);
                 dispatch(requestAPIError(error));
-            })
-    }
+            });
+    };
 };

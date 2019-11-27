@@ -7,8 +7,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const TAX_RATE = 0.07;
 
+var taxRate = 0;
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -42,14 +42,28 @@ function subtotal(items) {
 
 
 function SpanningTable(props) {
-    console.log('prrrrrrrrops', props.items);
     const classes = useStyles();
     const rows = [];
-    props.items.forEach(function(item, index){
+    props.bookInBasket.forEach(function(item, index){
         rows.push(createRow(item.title, 1, item.price));
     });
+    props.offer.forEach(function(item, index){
+        switch (item.type) {
+            case "percentage":
+                taxRate = item.value / 100;
+                break;
+            case "minus":
+                console.log('minus');
+                break;
+            case "slice":
+                console.log('"slice"');
+                break;
+            default:
+                console.log('default');
+        }
+    });
     const invoiceSubtotal = subtotal(rows);
-    const invoiceTaxes = TAX_RATE * invoiceSubtotal;
+    const invoiceTaxes = taxRate * invoiceSubtotal;
     const invoiceTotal = invoiceSubtotal - invoiceTaxes;
 
     return (
@@ -80,7 +94,7 @@ function SpanningTable(props) {
                     </TableRow>
                     <TableRow>
                         <TableCell>Tax</TableCell>
-                        <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
+                        <TableCell align="right">{`${(taxRate * 100).toFixed(0)} %`}</TableCell>
                         <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
                     </TableRow>
                     <TableRow>
