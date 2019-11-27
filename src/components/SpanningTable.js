@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 
-var taxRate = 0;
+
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
@@ -33,6 +33,16 @@ function createRow(desc, qty, unit) {
     return { desc, qty, unit, price };
 }
 
+function deductionPerPurchaseTranche(slice, sliceValue, invoiceTotal) {
+    console.log('slice', slice);
+    console.log('sliceValue', sliceValue);
+    console.log('invoiceTotal', invoiceTotal);
+    var result = Math.floor(invoiceTotal / slice);
+    console.log('result', result);
+    console.log('result * slice', result * slice);
+    return result * sliceValue;
+}
+
 function subtotal(items) {
     return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
 }
@@ -47,34 +57,45 @@ function SpanningTable(props) {
     props.bookInBasket.forEach(function(item, index){
         rows.push(createRow(item.title, 1, item.price));
     });
+    let discountRate = 0;
+    let deduction = 0;
+    let slice = 0;
+    let sliceValue = 0;
     props.offer.forEach(function(item, index){
         switch (item.type) {
             case "percentage":
-                taxRate = item.value / 100;
+                discountRate = item.value / 100;
                 break;
             case "minus":
                 console.log('minus');
+                deduction = item.value;
                 break;
             case "slice":
                 console.log('"slice"');
+                slice = item.sliceValue;
+                sliceValue = item.value;
                 break;
             default:
                 console.log('default');
         }
     });
     const invoiceSubtotal = subtotal(rows);
-    const invoiceTaxes = taxRate * invoiceSubtotal;
-    const invoiceTotal = invoiceSubtotal - invoiceTaxes;
+    const invoiceTaxes = discountRate * invoiceSubtotal;
 
+
+
+    let invoiceTotal = invoiceSubtotal - invoiceTaxes - deduction;
+    let deductionPerSlice = deductionPerPurchaseTranche(slice, sliceValue, invoiceTotal);
+    invoiceTotal -= deductionPerSlice;
     return (
         <Paper className={classes.root}>
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Desc</TableCell>
-                        <TableCell align="right">Qty.</TableCell>
-                        <TableCell align="right">@</TableCell>
-                        <TableCell align="right">Price</TableCell>
+                        <TableCell>Livre</TableCell>
+                        <TableCell align="right">Quantité.</TableCell>
+                        <TableCell align="right">P.U.</TableCell>
+                        <TableCell align="right">Prix/€</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -86,16 +107,25 @@ function SpanningTable(props) {
                             <TableCell align="right">{ccyFormat(row.price)}</TableCell>
                         </TableRow>
                     ))}
-
                     <TableRow>
-                        <TableCell rowSpan={3} />
+                        <TableCell rowSpan={5} />
                         <TableCell colSpan={2}>Subtotal</TableCell>
                         <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>Tax</TableCell>
-                        <TableCell align="right">{`${(taxRate * 100).toFixed(0)} %`}</TableCell>
+                        <TableCell>Remise</TableCell>
+                        <TableCell align="right">{`${(discountRate * 100).toFixed(0)} %`}</TableCell>
                         <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Déduction</TableCell>
+                        <TableCell align="right" />
+                        <TableCell align="right">{ccyFormat(deduction)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>tranche</TableCell>
+                        <TableCell align="right">{`${sliceValue} € par tranche de ${slice} €`}</TableCell>
+                        <TableCell align="right">{ccyFormat(deductionPerSlice)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell colSpan={2}>Total</TableCell>
