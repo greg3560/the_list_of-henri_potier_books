@@ -42,10 +42,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BookCard(book) {
-    const [expanded, setExpanded] = React.useState(false);
-    const [basketChecked, setBasketChecked] = React.useState(false);
     const {isbn, title, cover, synopsis, price} = book.item;
+    const [expanded, setExpanded] = React.useState(false);
+    const [basketChecked, setBasketChecked] = React.useState(book.basketList.indexOf(isbn) !== -1);
     const classes = useStyles();
+
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };

@@ -138,7 +138,6 @@ class SearchAppBar extends React.Component {
         const { value, suggestions } = this.state;
 
         this.props.data.map((item, index) => {
-            console.log('item', item);
             let isInArray = false;
             for (let data in dataAutoComplete[index]) {
                 if (data === 'title') {

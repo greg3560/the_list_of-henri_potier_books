@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import reducer from './reducers';
 import {createBrowserHistory} from "history";
 import {BrowserRouter as Router} from "react-router-dom";
+import {CookiesProvider} from 'react-cookie';
 
 const history = createBrowserHistory();
 
@@ -35,7 +36,9 @@ const store = createStore(reducer, enhancer);
 ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
-            <App/>
+            <CookiesProvider>
+                <App/>
+            </CookiesProvider>
         </Router>
     </Provider>,
     document.getElementById('root'),
