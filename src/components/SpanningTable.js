@@ -34,12 +34,7 @@ function createRow(desc, qty, unit) {
 }
 
 function deductionPerPurchaseTranche(slice, sliceValue, invoiceTotal) {
-    console.log('slice', slice);
-    console.log('sliceValue', sliceValue);
-    console.log('invoiceTotal', invoiceTotal);
     var result = Math.floor(invoiceTotal / slice);
-    console.log('result', result);
-    console.log('result * slice', result * slice);
     return result * sliceValue;
 }
 
@@ -67,16 +62,13 @@ function SpanningTable(props) {
                 discountRate = item.value / 100;
                 break;
             case "minus":
-                console.log('minus');
                 deduction = item.value;
                 break;
             case "slice":
-                console.log('"slice"');
                 slice = item.sliceValue;
                 sliceValue = item.value;
                 break;
             default:
-                console.log('default');
         }
     });
     const invoiceSubtotal = subtotal(rows);

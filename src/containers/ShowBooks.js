@@ -10,6 +10,7 @@ import * as BookActions from '../actions/RequestAPIAction';
 import * as BasketActions from '../actions/BasketAction';
 import SearchAppBar from '../components/SearchAppBar';
 import BookList from '../components/BookList';
+import TemporaryDrawer from '../components/TemporaryDrawer';
 
 // apply the action to the UI
 
@@ -32,5 +33,5 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default {
     BookList: connect(mapStateToProps, mapDispatchToProps)(BookList),
-    SearchAppBar: connect(mapStateToProps, mapDispatchToProps)(SearchAppBar)
+    SearchAppBar: connect(mapStateToProps, mapDispatchToProps)(SearchAppBar),
 }

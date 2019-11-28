@@ -3,7 +3,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
 import {fade, withStyles} from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -11,6 +10,7 @@ import Autosuggest from 'react-autosuggest';
 import './styles/SearchAppBar.css';
 import {Link} from "react-router-dom";
 import * as url from '../constants/App';
+import TemporaryDrawer from './TemporaryDrawer';
 
 // tableau contenant les suggestions
 const dataAutoComplete = [];
@@ -98,8 +98,8 @@ const styles = theme => ({
 
 
 class SearchAppBar extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         // Autosuggest is a controlled component.
         // This means that you need to provide an input value
@@ -108,7 +108,8 @@ class SearchAppBar extends React.Component {
         // and they are initially empty because the Autosuggest is closed.
         this.state = {
             value: '',
-            suggestions: []
+            suggestions: [],
+            menuOpen: false
         };
     }
 
@@ -131,6 +132,10 @@ class SearchAppBar extends React.Component {
         this.setState({
             suggestions: []
         });
+    };
+
+    handleClickMenu = () => {
+        this.setState({menuOpen: !this.state.menuOpen});
     };
 
     render() {
@@ -164,6 +169,7 @@ class SearchAppBar extends React.Component {
                             className={classes.menuButton}
                             color="inherit"
                             aria-label="open drawer"
+                            onClick={this.handleClickMenu}
                         >
                             <MenuIcon/>
                         </IconButton>
@@ -188,10 +194,11 @@ class SearchAppBar extends React.Component {
                             />
                         </div>
                     </Toolbar>
+                    <TemporaryDrawer open={this.state.menuOpen} handleClickMenu={this.handleClickMenu} />
                 </AppBar>
             </div>
-        )
-    };
+        );
+    }
 }
 
 export default withStyles(styles)(SearchAppBar);
