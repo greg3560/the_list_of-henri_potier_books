@@ -80,14 +80,6 @@ export default function TemporaryDrawer(props) {
                                         primary={text}/></Link>
                                 </ListItem>
                             );
-                        case 'Livre':
-                            return (
-                                <ListItem button key={text}>
-                                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                                    <Link to={"/book/23"} className={classes.linkText}><ListItemText
-                                        primary={text}/></Link>
-                                </ListItem>
-                            );
                     }
                 })}
             </List>

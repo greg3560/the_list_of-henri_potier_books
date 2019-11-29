@@ -1,6 +1,5 @@
 import React from 'react';
 import SpanningTable from './SpanningTable';
-import BookCard from "./BookCard";
 
 class BookList extends React.Component {
     constructor(props) {
@@ -10,13 +9,20 @@ class BookList extends React.Component {
 
     }
 
+    componentWillUnmount() {
+        // this.props.offersActions = []; // when the component unmount init the offers
+    }
     render() {
         let bookInBasket = this.props.data.filter(book => {
             return this.props.basketList.indexOf(book.isbn) !== -1;
         });
         return (
             <div>
-                <SpanningTable bookInBasket={bookInBasket} offer={this.props.dataOffers} />
+                {this.props.dataOffers.length > 0 && (
+                    <div>
+                        <SpanningTable bookInBasket={bookInBasket} offer={this.props.dataOffers} />
+                    </div>
+                )}
             </div>
         );
     }

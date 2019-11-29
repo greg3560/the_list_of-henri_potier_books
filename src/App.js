@@ -31,10 +31,7 @@ class App extends Component {
         cookie.save('basket', this.props.state.basket.basket, {
             path: '/',
             expires,
-            maxAge: 1000,
-            domain: 'http://localhost',
-            secure: true,
-            httpOnly: true
+            maxAge: 1000
         });
     }
 
