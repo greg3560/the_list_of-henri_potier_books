@@ -1,27 +1,9 @@
 import React, {useEffect} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import SpanningTableRender from './SpanningTableRender';
 
+var offersPossibility = [];
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        marginTop: theme.spacing(3),
-        overflowX: 'auto',
-    },
-    table: {
-        minWidth: 700,
-    },
-}));
-
-function ccyFormat(num) {
-    return `${num.toFixed(2)}`;
-}
+const invoiceTaxes = (value, discountRate) => discountRate * value;
 
 function priceRow(qty, unit) {
     return qty * unit;
@@ -32,25 +14,13 @@ function createRow(desc, qty, unit) {
     return {desc, qty, unit, price};
 }
 
-// const deductionPerPurchaseTranche = (slice, sliceValue, invoiceTotal) =>
-//     Math.floor(invoiceTotal / slice) * sliceValue;
-
-const deductionPerPurchaseTranche = (slice, sliceValue, invoiceTotal1) => {
-    // console.log('invoiceTotal1', invoiceTotal1);
-    // console.log('slice', slice);
-    // console.log('Math.floor', Math.floor(invoiceTotal1 / slice));
-    // console.log('sliceValue', sliceValue);
-    // console.log('invoiceTotal', invoiceTotal1);
-    return Math.floor(invoiceTotal1 / slice) * sliceValue;
-};
+const deductionPerPurchaseTranche = (slice, sliceValue, invoiceTotal) =>
+    Math.floor(invoiceTotal / slice) * sliceValue;
 
 
 function subtotal(items) {
     return items.map(({price}) => price).reduce((sum, i) => sum + i, 0);
 }
-
-
-var offersPossibility = [];
 
 // Generate the permutation for a given n (amount of elements) and a given array
 function generate(n, arr) {
@@ -82,225 +52,144 @@ function swap(arr, idxA, idxB) {
     arr[idxB] = tmp;
 }
 
-
-function SpanningTable(props) {
-    const classes = useStyles();
-    // useEffect(() => { // will unmount
-    //     console.log('unMount');
-    //     return () => {
-    //         offersPossibility = [];
-    //     };
-    // }, []);
-    useEffect(() => { // will unmount
-        return () => {
-            offersPossibility = [];
-        };
-    });
-    const rows = [];
-    props.bookInBasket.forEach(function (item, index) {
-        rows.push(createRow(item.title, 1, item.price));
-    });
-    let discountRate = 0;
-    let deduction = 0;
-    let slice = 0;
-    let sliceValue = 0;
-    let indexBestOffer = null;
-
-    props.offer.forEach(function (item, index) {
-        switch (item.type) {
-            case "percentage":
-                discountRate = item.value / 100;
-                break;
-            case "minus":
-                deduction = item.value;
-                break;
-            case "slice":
-                slice = item.sliceValue;
-                sliceValue = item.value;
-                break;
-            default:
-        }
-    });
-    const invoiceSubtotal = subtotal(rows);
-
-
-    const invoiceTaxes = (value) => discountRate * value;
-
-    const searchIndexBestOffer = (tab2) => {
-
-        let min = null;
-        for (var i = 0, c = tab2.length; i < c; i++) {
-            if (i === 0) {
-                min = tab2[i];
+const searchIndexBestOffer = (array) => {
+    let indexBestOffer;
+    let min = null;
+    for (var i = 0, c = array.length; i < c; i++) {
+        if (i === 0) {
+            min = array[i];
+            indexBestOffer = i;
+        } else {
+            if (min > array[i]) {
+                min = array[i];
                 indexBestOffer = i;
-            } else {
-                if (min > tab2[i]) {
-                    min = tab2[i];
-                    indexBestOffer = i;
-                }
             }
         }
-        return indexBestOffer;
-    };
+    }
+    return indexBestOffer;
+};
 
+const getValueOfferPercentage = (dataView, resultForEachOffers, count) => {
+    let result;
+    if (count === 0) return invoiceTaxes(dataView.invoiceSubtotal, dataView.discountRate);
+    else {
+        for (let i = 0; i < resultForEachOffers.length; i++) {
+            if (i === 0) result = dataView.invoiceSubtotal - resultForEachOffers[i];
+            else result -= resultForEachOffers[i];
+        }
+        return invoiceTaxes(result, dataView.discountRate);
+    }
+};
 
-    let invoiceTotal = invoiceSubtotal - invoiceTaxes(invoiceSubtotal) - deduction;
-    let deductionPerSlice = deductionPerPurchaseTranche(slice, sliceValue, invoiceTotal);
-    invoiceTotal -= deductionPerSlice;
+const getValueOfferSlice = (dataView, resultForEachOffers, count) => {
+    let result;
+    if (count === 0) result = deductionPerPurchaseTranche(dataView.slice, dataView.sliceValue, dataView.invoiceSubtotal);
+    else {
+        for (let i = 0; i < resultForEachOffers.length; i++) {
+            if (i === 0) {
+                result = dataView.invoiceSubtotal - resultForEachOffers[i];
+            } else result -= resultForEachOffers[i];
+        }
+        result = deductionPerPurchaseTranche(dataView.slice, dataView.sliceValue, result);
+    }
+    return result;
+};
 
-    console.log('props.offer', props.offer);
-    var offers = ['invoiceTaxes', 'deductionPerPurchaseTranche', deduction];
+const getresulTotalPerOffer = (resultForEachOffers, dataView) => {
+    let resultTotalPerOffer;
+    for (let i = 0, c = resultForEachOffers.length; i < c; i++) {
+        if (i === 0) resultTotalPerOffer = dataView.invoiceSubtotal - resultForEachOffers[i];
+        else resultTotalPerOffer -= resultForEachOffers[i];
+    }
+    return resultTotalPerOffer;
+};
 
-// Get the permutations
-    generate(offers.length, offers);
-    console.log('offersPossibility', offersPossibility);
-    let tab = [];
-    let tab2 = [];
+const getIndexBestOffer = (dataView) => {
+    let resultForEachOffers = [];
+    let resultsByPossibility = [];
+    let indexBestOffer;
     for (let i = 0, c = offersPossibility.length; i < c; i++) {
         let count = 0;
-        tab = [];
+        resultForEachOffers = [];
         let result = 0;
         for (var prop in offersPossibility[i]) {
 
             if (offersPossibility[i].hasOwnProperty(prop)) {
-                // tab.push(offersPossibility[i][prop]);
-                console.log(`obj.${prop} = ${offersPossibility[i][prop]}`);
-
-                console.log('offersPossibility[i][prop]', offersPossibility[i][prop]);
-
                 switch (offersPossibility[i][prop]) {
-                    case 'invoiceTaxes':
-                        if (count === 0) result = invoiceTaxes(invoiceSubtotal);
-                        else {
-                            for (let i = 0; i < tab.length; i++) {
-                                if (i === 0) result = invoiceSubtotal - tab[i];
-                                else result -= tab[i];
-                            }
-                            result = invoiceTaxes(result);
-                        }
-                        // console.log('result1', result);
+                    case 'percentage':
+                        result = getValueOfferPercentage(dataView, resultForEachOffers, count);
                         break;
-                    case 'deductionPerPurchaseTranche':
-                        if (count === 0) result = deductionPerPurchaseTranche(slice, sliceValue, invoiceSubtotal);
-                        else {
-                            for (let i = 0; i < tab.length; i++) {
-                                if (i === 0) {
-                                    result = invoiceSubtotal - tab[i];
-                                } else result -= tab[i];
-                            }
-                            console.log('slice', slice);
-                            console.log('sliceValue', sliceValue);
-                            console.log('result', result);
-                            result = deductionPerPurchaseTranche(slice, sliceValue, result);
-                            console.log('result2', result);
-                        }
-                        // console.log('result2', result);
+                    case 'slice':
+                        result = getValueOfferSlice(dataView, resultForEachOffers, count);
                         break;
-                    default:
-                        if (count === 0) result = offersPossibility[i][prop];
-                        else {
-                            for (let i = 0; i < tab.length; i++) {
-                                if (i === 0) result = tab[i];
-                                else result -= tab[i];
-                            }
-                            result = offersPossibility[i][prop];
-                        }
-                    // console.log('result3', result);
+                    case 'minus':
+                        result = dataView.deduction;
+                        break;
                     // TODO spinner
                 }
-                if (result !== 0) tab.push(result);
+                if (result !== 0) resultForEachOffers.push(result);
                 count++;
             }
         }
-        console.log('resultZ', tab);
-        offersPossibility[i].data = tab;
+        offersPossibility[i].data = resultForEachOffers;
 
-        let ultimeResult = 0;
-        for (let i = 0, c = tab.length; i < c; i++) {
-            if (i === 0) ultimeResult = invoiceSubtotal - tab[i];
-            else ultimeResult -= tab[i];
-        }
-        tab2.push(ultimeResult);
-        let indexBestOffer = searchIndexBestOffer(tab2);
-        offersPossibility[i].result = tab2[i];
+        let resultTotalPerOffer = getresulTotalPerOffer(offersPossibility[i].data, dataView);
+        resultsByPossibility.push(resultTotalPerOffer);
+        indexBestOffer = searchIndexBestOffer(resultsByPossibility);
+        offersPossibility[i].result = resultsByPossibility[i];
     }
-    console.log('offersPossibilityoffersPossibility', offersPossibility);
-    console.log('TTAABB', tab2);
+    return indexBestOffer;
+};
 
-    // console.log('indexBestOffer', indexBestOffer);
-    // console.log('indexBestOffer', offersPossibility[indexBestOffer]);
-    // console.log('props.offer', props.offer);
-    const generateOffersCells = () => {
-        var stuff = [];
-        for (let i = 0, c = props.offer.length; i < c; i++) {
-            let typeOffer = offersPossibility[indexBestOffer]['value' + i];
-            switch (typeOffer) {
-                case 'invoiceTaxes':
-                    stuff.push((
-                        <TableRow>
-                            <TableCell>Remise</TableCell>
-                            <TableCell align="right">{`${(discountRate * 100).toFixed(0)} %`}</TableCell>
-                            <TableCell align="right">{ccyFormat(offersPossibility[indexBestOffer].data[i])}</TableCell>
-                        </TableRow>
-                    ));
-                    break;
-                case 'deductionPerPurchaseTranche':
-                    stuff.push((
-                        <TableRow>
-                            <TableCell>tranche</TableCell>
-                            <TableCell align="right">{`${sliceValue} €/ ${slice} € d'achats`}</TableCell>
-                            <TableCell align="right">{ccyFormat(offersPossibility[indexBestOffer].data[i])}</TableCell>
-                        </TableRow>
-                    ));
-                    break;
-                default:
-                    stuff.push((
-                        <TableRow>
-                            <TableCell>Déduction</TableCell>
-                            <TableCell align="right"/>
-                            <TableCell align="right">{ccyFormat(offersPossibility[indexBestOffer].data[i])}</TableCell>
-                        </TableRow>
-                    ));
-            }
-        }
-        stuff.push((
-            <TableRow>
-                <TableCell colSpan={2}>Total</TableCell>
-                <TableCell align="right">{ccyFormat(offersPossibility[indexBestOffer].result)}</TableCell>
-            </TableRow>
-        ));
-        return stuff;
+function SpanningTable(props) {
+    useEffect(() => {
+        return () => {
+            console.log('will unmount');
+            offersPossibility = [];
+        };
+    }, []);
+    useEffect(() => {
+        console.log('mounted');
+        offersPossibility = [];
+    });
+    let dataView = {
+        rows: [],
+        offersPossibility: []
+
     };
+
+    props.bookInBasket.forEach((item) => dataView.rows.push(createRow(item.title, 1, item.price)));
+    dataView.invoiceSubtotal = subtotal(dataView.rows);
+
+    let offers = [];
+    props.offer.forEach(function (item) {
+        switch (item.type) {
+            case "percentage":
+                offers.push(item.type);
+                dataView.discountRate = item.value / 100;
+                break;
+            case "minus":
+                offers.push(item.type);
+                dataView.deduction = item.value;
+                break;
+            case "slice":
+                offers.push(item.type);
+                dataView.slice = item.sliceValue;
+                dataView.sliceValue = item.value;
+                break;
+            default:
+        }
+    });
+
+    // Get the permutations
+    generate(offers.length, offers);
+    dataView.indexBestOffer = getIndexBestOffer(dataView);
+    dataView.offersPossibility = offersPossibility;
+
     return (
-        <Paper className={classes.root}>
-            <Table className={classes.table}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Livre</TableCell>
-                        <TableCell align="right">Quantité.</TableCell>
-                        <TableCell align="right">P.U.</TableCell>
-                        <TableCell align="right">Prix/€</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map(row => (
-                        <TableRow key={row.desc}>
-                            <TableCell>{row.desc}</TableCell>
-                            <TableCell align="right">{row.qty}</TableCell>
-                            <TableCell align="right">{row.unit}</TableCell>
-                            <TableCell align="right">{ccyFormat(row.price)}</TableCell>
-                        </TableRow>
-                    ))}
-                    <TableRow>
-                        <TableCell rowSpan={5}/>
-                        <TableCell colSpan={2}>Subtotal</TableCell>
-                        <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
-                    </TableRow>
-                    {generateOffersCells().map((item) => item)}
-                </TableBody>
-            </Table>
-        </Paper>
+        <SpanningTableRender propsParent={props} dataView={dataView}/>
     );
+
 }
 
 export default SpanningTable;
