@@ -1,4 +1,5 @@
 import React from "react";
+
 const BallSpinner = props => (
     <svg width="100px" height="100px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
          preserveAspectRatio="xMidYMid" className="lds-ball">

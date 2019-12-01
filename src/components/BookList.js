@@ -1,5 +1,7 @@
 import React from 'react';
 import BookCard from './BookCard';
+import BallSpinner from "../icon/BallSpinner";
+import Grid from '@material-ui/core/Grid';
 
 class BookList extends React.Component {
     constructor(props) {
@@ -15,16 +17,17 @@ class BookList extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.props.data.map((book, index) => {
+            <Grid container spacing={5} direction={'row'} justify={'space-between'} alignItems={'stretch'}>
+                {this.props.data.length > 0 && this.props.data.map((book, index) => {
                     return <BookCard
                         key={index}
                         book={book}
                         handleClickBasket={this.handleClickBasket}
                         basketList={this.props.basketList}
-                    />
+                    />;
                 })}
-            </div>
+                {/*{this.props.data.length === 0 && <BallSpinner/>}*/}
+            </Grid>
         );
     }
 }

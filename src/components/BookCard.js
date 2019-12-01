@@ -19,6 +19,7 @@ import * as url from '../constants/App';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PropTypes from 'prop-types';
 import SpanningTableRender from "./SpanningTableRender";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -44,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function BookCard(props) {
-    const {book, handleClickBasket, basketList } = props;
+    const {book, handleClickBasket, basketList} = props;
     const {isbn, title, cover, synopsis, price} = book;
     const [expanded, setExpanded] = React.useState(false);
     const [basketChecked, setBasketChecked] = React.useState(basketList.indexOf(isbn) !== -1);
@@ -54,60 +55,61 @@ function BookCard(props) {
         setExpanded(!expanded);
     };
 
-    const toggleBasket =(e) => {
+    const toggleBasket = (e) => {
         handleClickBasket(e, basketChecked);
         setBasketChecked(!basketChecked);
     };
 
     return (
-
-        <Card className={classes.card}>
-            <CardHeader
-                avatar={
-                    <Avatar aria-label="recipe" className={classes.avatar}>
-                        {title[0]}
-                    </Avatar>
-                }
-                action={
-                    <IconButton aria-label="settings">
-                        <MoreVertIcon/>
-                    </IconButton>
-                }
-                title={title}
-                subheader={price + ' euros'}
-            />
-            <CardMedia
-                className={classes.media}
-                image={cover}
-                title="Paella dish"
-            />
-            <CardContent>
-                <Link to={url.ROUTE_BOOK + isbn}>Fiche détaillé</Link>
-            </CardContent>
-            <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites" isbn={isbn} onClick={toggleBasket}>
-                    {basketChecked ? <AddShoppingCartIcon color="primary" /> : <AddShoppingCartIcon />}
-                </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon/>
-                </IconButton>
-                <IconButton
-                    className={clsx(classes.expand, {
-                        [classes.expandOpen]: expanded,
-                    })}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
-                >
-                    <ExpandMoreIcon/>
-                </IconButton>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Card className={classes.card}>
+                <CardHeader
+                    avatar={
+                        <Avatar aria-label="recipe" className={classes.avatar}>
+                            {title[0]}
+                        </Avatar>
+                    }
+                    action={
+                        <IconButton aria-label="settings">
+                            <MoreVertIcon/>
+                        </IconButton>
+                    }
+                    title={title}
+                    subheader={price + ' euros'}
+                />
+                <CardMedia
+                    className={classes.media}
+                    image={cover}
+                    title="Paella dish"
+                />
                 <CardContent>
-                    {synopsis}
+                    <Link to={url.ROUTE_BOOK + isbn}>Fiche détaillé</Link>
                 </CardContent>
-            </Collapse>
-        </Card>
+                <CardActions disableSpacing>
+                    <IconButton aria-label="add to favorites" isbn={isbn} onClick={toggleBasket}>
+                        {basketChecked ? <AddShoppingCartIcon color="primary"/> : <AddShoppingCartIcon/>}
+                    </IconButton>
+                    <IconButton aria-label="share">
+                        <ShareIcon/>
+                    </IconButton>
+                    <IconButton
+                        className={clsx(classes.expand, {
+                            [classes.expandOpen]: expanded,
+                        })}
+                        onClick={handleExpandClick}
+                        aria-expanded={expanded}
+                        aria-label="show more"
+                    >
+                        <ExpandMoreIcon/>
+                    </IconButton>
+                </CardActions>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <CardContent>
+                        {synopsis}
+                    </CardContent>
+                </Collapse>
+            </Card>
+        </Grid>
     );
 }
 

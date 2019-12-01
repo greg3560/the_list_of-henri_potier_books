@@ -39,6 +39,7 @@ const renderSuggestion = ({isbn, title}) => (
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        marginBottom: '3rem'
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -175,7 +176,7 @@ class SearchAppBar extends React.Component {
                             <MenuIcon/>
                         </IconButton>
                         <Typography className={classes.title} variant="h6" noWrap>
-                            Material-UI
+                            Henri Potier
                         </Typography>
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>

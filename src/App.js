@@ -8,6 +8,8 @@ import {connect} from 'react-redux';
 import cookie from 'react-cookies'
 import {bindActionCreators} from "redux";
 import * as BasketActions from "./actions/BasketAction";
+import './components/styles/normalize.css';
+import Grid from "@material-ui/core/Grid";
 
 
 const styles = {
@@ -41,30 +43,38 @@ class App extends Component {
 
         const {classes} = this.props;
         return (
-            <div className={classes.root}>
-                <div>
+            <Grid className={classes.root}>
+                <Grid container direction={'row'} justify={'space-around'}>
                     {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
                     <Router>
                         <Switch>
                             <Route path={"/books"}>
-                                <ShowBooks.SearchAppBar/>
-                                <ShowBooks.BookList/>
+                                <Grid item xs={12}>
+                                    <ShowBooks.SearchAppBar/>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <ShowBooks.BookList/>
+                                </Grid>
                             </Route>
                             <Route path={"/book/:id"} component={DetailsPage}/>
                             <Route path={"/basket"}>
-                                <div>
+                                <Grid item xs={12}>
                                     <ShowBooks.SearchAppBar/>
+                                </Grid>
+                                <Grid item xs={10}>
                                     <ShowBasket.Basket/>
-                                </div>
+                                </Grid>
                             </Route>
                             <Route path={"/"} component={ShowBooks.SearchAppBar}>
-                                <ShowBooks.SearchAppBar/>
+                                <Grid item xs={12}>
+                                    <ShowBooks.SearchAppBar/>
+                                </Grid>>
                             </Route>
                         </Switch>
                     </Router>
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         );
     }
 }
