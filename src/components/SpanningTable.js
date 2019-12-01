@@ -1,5 +1,6 @@
 import React from 'react';
 import SpanningTableRender from './SpanningTableRender';
+import PropTypes from "prop-types";
 
 const invoicePercentage = (value, discountRate) => discountRate * value;
 
@@ -151,15 +152,17 @@ export const getResultForAllOffer = (dataView) => {
 };
 
 function SpanningTable(props) {
+    const {bookInBasket, offer } = props;
+    console.log('props', props);
     let dataView = {
         rows: [],
         offersPossibilities: []
     };
-    props.bookInBasket.forEach((item) => dataView.rows.push(createRow(item.title, 1, item.price)));
+    bookInBasket.forEach((item) => dataView.rows.push(createRow(item.title, 1, item.price)));
     dataView.invoiceSubtotal = subtotal(dataView.rows);
 
     let offers = [];
-    props.offer.forEach(function (item) {
+    offer.forEach(function (item) {
         switch (item.type) {
             case "percentage":
                 offers.push(item.type);
@@ -191,5 +194,10 @@ function SpanningTable(props) {
         <SpanningTableRender propsParent={props} dataView={dataView}/>
     );
 }
+
+SpanningTable.propTypes = {
+    bookInBasket: PropTypes.array.isRequired,
+    offer: PropTypes.array.isRequired,
+};
 
 export default SpanningTable;

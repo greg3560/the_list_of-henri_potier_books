@@ -18,6 +18,7 @@ import {Link} from "react-router-dom";
 import * as url from '../constants/App';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PropTypes from 'prop-types';
+import SpanningTableRender from "./SpanningTableRender";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -42,10 +43,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function BookCard(book) {
-    const {isbn, title, cover, synopsis, price} = book.item;
+function BookCard(props) {
+    const {book, handleClickBasket, basketList } = props;
+    const {isbn, title, cover, synopsis, price} = book;
     const [expanded, setExpanded] = React.useState(false);
-    const [basketChecked, setBasketChecked] = React.useState(book.basketList.indexOf(isbn) !== -1);
+    const [basketChecked, setBasketChecked] = React.useState(basketList.indexOf(isbn) !== -1);
     const classes = useStyles();
 
     const handleExpandClick = () => {
@@ -53,7 +55,7 @@ export default function BookCard(book) {
     };
 
     const toggleBasket =(e) => {
-        book.handleClickBasket(e, basketChecked);
+        handleClickBasket(e, basketChecked);
         setBasketChecked(!basketChecked);
     };
 
@@ -111,4 +113,8 @@ export default function BookCard(book) {
 
 BookCard.propTypes = {
     book: PropTypes.object.isRequired,
+    handleClickBasket: PropTypes.func.isRequired,
+    basketList: PropTypes.array.isRequired,
 };
+
+export default BookCard;

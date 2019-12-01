@@ -9,6 +9,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import * as url from "../constants/App";
 import {Link} from "react-router-dom";
+import PropTypes from "prop-types";
+import SpanningTableRender from "./SpanningTableRender";
 
 const useStyles = makeStyles({
     list: {
@@ -26,7 +28,8 @@ const useStyles = makeStyles({
     }
 });
 
-export default function TemporaryDrawer(props) {
+function TemporaryDrawer(props) {
+    const {handleClickMenu, open } = props;
     const classes = useStyles();
     const [state, setState] = React.useState({
         top: false,
@@ -36,15 +39,15 @@ export default function TemporaryDrawer(props) {
     });
 
     const toggleDrawer = (side, open, firstCall = false) => event => {
-        if (!firstCall && !open) props.handleClickMenu();
+        if (!firstCall && !open) handleClickMenu();
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) return;
         setState({...state, [side]: open});
     };
 
     //effect hook equivalent to componentDidUpdate
     useEffect(() => {
-        toggleDrawer('left', props.open, true)({type: '', key: ''});
-    }, [props.open]);
+        toggleDrawer('left', open, true)({type: '', key: ''});
+    }, [open]);
 
     const sideList = side => (
         <div
@@ -94,3 +97,10 @@ export default function TemporaryDrawer(props) {
         </div>
     );
 }
+
+TemporaryDrawer.propTypes = {
+    handleClickMenu: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired
+};
+
+export default TemporaryDrawer;

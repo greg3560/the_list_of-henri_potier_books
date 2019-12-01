@@ -23,7 +23,7 @@ export const requestAPIError = (error) => ({ // action for api error
 
 export const fetchBooks = () => {
     const options = {
-        url: `${APIConfig.API_URI + APIConfig.END_POINT}`,
+        url: `${APIConfig.PROXY_URL + APIConfig.API_URI + APIConfig.END_POINT}`,
         headers: {
             'Access-Control-Allow-Origin': null,
             "x-requested-with": "xhr",
@@ -35,7 +35,7 @@ export const fetchBooks = () => {
     axios(options);
     return (dispatch) => {
         dispatch(requestAPI());
-        return axios.get(`${APIConfig.API_URI + APIConfig.END_POINT}`)
+        return axios.get(`${APIConfig.PROXY_URL + APIConfig.API_URI + APIConfig.END_POINT}`)
             .then((response) => {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");

@@ -20,7 +20,7 @@ class App extends Component {
 
         let cookies = cookie.load('basket');
         if (typeof cookies !== 'undefined' && cookies.length > 0) {
-            cookies.map((item, index) => {
+            cookies.map((item) => {
                 this.props.basket.addBasket(item);
             });
         }
@@ -28,7 +28,7 @@ class App extends Component {
 
     componentDidUpdate() {
         const expires = new Date();
-        expires.setDate(Date.now() + 1000 * 60 * 60 * 24 * 14);
+        expires.setDate(Date.now() + 60 * 60 * 24 * 14); // destruction in 15 days
         cookie.save('basket', this.props.state.basket.basket, {
             path: '/',
             expires,
@@ -45,7 +45,7 @@ class App extends Component {
                 <div>
                     {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-                    <Router location={'/'}>
+                    <Router>
                         <Switch>
                             <Route path={"/books"}>
                                 <ShowBooks.SearchAppBar/>

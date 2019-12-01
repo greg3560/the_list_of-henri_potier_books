@@ -6,6 +6,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import React from "react";
 import {makeStyles} from "@material-ui/core";
+import PropTypes from "prop-types";
+import SpanningTable from "./SpanningTable";
 
 function ccyFormat(num) {
     return `${num.toFixed(2)}`;
@@ -26,13 +28,14 @@ function SpanningTableRender(props) {
     const {propsParent, dataView } = props;
     const classes = useStyles();
     const generateOffersCells = () => {
-        var stuff = [];
-        for (let i = 0, c = propsParent.offer.length; i < c; i++) {
+        let cells = [];
+        let i;
+        for (i = 0; i < propsParent.offer.length; i++) {
             let typeOffer = dataView.offersPossibilities[dataView.indexBestOffer]['value' + i];
             switch (typeOffer) {
                 case 'percentage':
-                    stuff.push((
-                        <TableRow>
+                    cells.push((
+                        <TableRow key={i}>
                             <TableCell>Remise</TableCell>
                             <TableCell align="right">{`${(dataView.discountRate * 100).toFixed(0)} %`}</TableCell>
                             <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].data[i])}</TableCell>
@@ -40,8 +43,8 @@ function SpanningTableRender(props) {
                     ));
                     break;
                 case 'slice':
-                    stuff.push((
-                        <TableRow>
+                    cells.push((
+                        <TableRow key={i}>
                             <TableCell>tranche</TableCell>
                             <TableCell align="right">{`${dataView.sliceValue} €/ ${dataView.slice} € d'achats`}</TableCell>
                             <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].data[i])}</TableCell>
@@ -49,8 +52,8 @@ function SpanningTableRender(props) {
                     ));
                     break;
                 case 'minus':
-                    stuff.push((
-                        <TableRow>
+                    cells.push((
+                        <TableRow key={i}>
                             <TableCell>Déduction</TableCell>
                             <TableCell align="right"/>
                             <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].data[i])}</TableCell>
@@ -59,13 +62,13 @@ function SpanningTableRender(props) {
                     break;
             }
         }
-        stuff.push((
-            <TableRow>
+        cells.push((
+            <TableRow key={i + 1}>
                 <TableCell colSpan={2}>Total</TableCell>
                 <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].result)}</TableCell>
             </TableRow>
         ));
-        return stuff;
+        return cells;
     };
     return (
         <Paper className={classes.root}>
@@ -92,11 +95,16 @@ function SpanningTableRender(props) {
                         <TableCell colSpan={2}>Subtotal</TableCell>
                         <TableCell align="right">{ccyFormat(dataView.invoiceSubtotal)}</TableCell>
                     </TableRow>
-                    {generateOffersCells().map((item) => item)}
+                    {generateOffersCells()}
                 </TableBody>
             </Table>
         </Paper>
     );
 }
+
+SpanningTableRender.propTypes = {
+    propsParent: PropTypes.object.isRequired,
+    dataView: PropTypes.object.isRequired,
+};
 
 export default SpanningTableRender;

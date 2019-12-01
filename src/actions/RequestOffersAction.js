@@ -24,7 +24,7 @@ export const requestAPIOffersError = (errorOffers) => ({ // action for api error
 export const fetchOffers = (basket) => {
     const queryBasket = basket.toString();
     const options = {
-        url: `${APIConfig.API_URI + '/' + queryBasket + APIConfig.END_POINT_OFFERS}`,
+        url: `${APIConfig.PROXY_URL + APIConfig.API_URI + '/' + queryBasket + APIConfig.END_POINT_OFFERS}`,
         headers: {
             'Access-Control-Allow-Origin': null,
             "x-requested-with": "xhr",
@@ -36,7 +36,7 @@ export const fetchOffers = (basket) => {
     axios(options);
     return (dispatch) => {
         dispatch(requestAPIOffers());
-        return axios.get(`${APIConfig.API_URI + '/' + queryBasket + APIConfig.END_POINT_OFFERS}`)
+        return axios.get(`${APIConfig.PROXY_URL + APIConfig.API_URI + '/' + queryBasket + APIConfig.END_POINT_OFFERS}`)
             .then((response) => {
                 if (response.status >= 400) {
                     throw new Error("Bad response from server");

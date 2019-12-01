@@ -11,6 +11,7 @@ import './styles/SearchAppBar.css';
 import {Link} from "react-router-dom";
 import * as url from '../constants/App';
 import TemporaryDrawer from './TemporaryDrawer';
+import PropTypes from "prop-types";
 
 // tableau contenant les suggestions
 const dataAutoComplete = [];
@@ -113,7 +114,7 @@ class SearchAppBar extends React.Component {
         };
     }
 
-    onChange = (event, { newValue }) => {
+    onChange = (event, {newValue}) => {
         this.setState({
             value: newValue
         });
@@ -121,7 +122,7 @@ class SearchAppBar extends React.Component {
 
     // Autosuggest will call this function every time you need to update suggestions.
     // You already implemented this logic above, so just use it.
-    onSuggestionsFetchRequested = ({ value }) => {
+    onSuggestionsFetchRequested = ({value}) => {
         this.setState({
             suggestions: getSuggestions(value)
         });
@@ -140,7 +141,7 @@ class SearchAppBar extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const { value, suggestions } = this.state;
+        const {value, suggestions} = this.state;
 
         this.props.data.map((item, index) => {
             let isInArray = false;
@@ -194,11 +195,14 @@ class SearchAppBar extends React.Component {
                             />
                         </div>
                     </Toolbar>
-                    <TemporaryDrawer open={this.state.menuOpen} handleClickMenu={this.handleClickMenu} />
+                    <TemporaryDrawer open={this.state.menuOpen} handleClickMenu={this.handleClickMenu}/>
                 </AppBar>
             </div>
         );
     }
 }
 
+SearchAppBar.propTypes = {
+    classes: PropTypes.object.isRequired
+};
 export default withStyles(styles)(SearchAppBar);

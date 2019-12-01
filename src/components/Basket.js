@@ -5,13 +5,9 @@ class BookList extends React.Component {
     constructor(props) {
         super(props);
         props.actions.fetchBooks();
-        props.offersActions.fetchOffers(props.basketList);
-
+        if (props.basketList.length > 0) props.offersActions.fetchOffers(props.basketList);
     }
 
-    componentWillUnmount() {
-        // this.props.offersActions = []; // when the component unmount init the offers
-    }
     render() {
         let bookInBasket = this.props.data.filter(book => {
             return this.props.basketList.indexOf(book.isbn) !== -1;

@@ -16,10 +16,10 @@ class BookList extends React.Component {
     render() {
         return (
             <div>
-                {this.props.data.map((item, index) => {
+                {this.props.data.map((book, index) => {
                     return <BookCard
                         key={index}
-                        item={item}
+                        book={book}
                         handleClickBasket={this.handleClickBasket}
                         basketList={this.props.basketList}
                     />
