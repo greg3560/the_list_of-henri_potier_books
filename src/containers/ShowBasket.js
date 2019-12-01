@@ -5,14 +5,10 @@ to update the interface with the call for actions
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
 import * as BookActions from '../actions/RequestAPIAction';
 import * as offersActions from '../actions/RequestOffersAction';
-import SearchAppBar from '../components/SearchAppBar';
 import Basket from '../components/Basket';
-import offersApi from "../reducers/offersApi";
 
-// apply the action to the UI
 
 const mapStateToProps = (state) => {
     return {
@@ -23,10 +19,7 @@ const mapStateToProps = (state) => {
 };
 
 // link component with actions and dispatch
-// const mapDispatchToProps = (dispatch) => ({
-//     actions: bindActionCreators(BookActions, dispatch),
-//     basket: bindActionCreators(BasketActions, dispatch),
-// });
+
 /*
     connection to the redux store.
     update UI with dispatch action

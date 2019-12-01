@@ -2,7 +2,6 @@ import * as configAPI from '../src/constants/APIConfig';
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let should = chai.should();
-// TODO componentDidMount appel api
 
 
 chai.use(chaiHttp);

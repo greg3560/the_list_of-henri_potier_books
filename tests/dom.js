@@ -15,5 +15,3 @@ global.navigator = {
     userAgent: 'node.js',
 };
 copyProps(window, global);
-
-// test": "./node_modules/.bin/mocha --require @babel/register --require ignore-styles --timeout 10000

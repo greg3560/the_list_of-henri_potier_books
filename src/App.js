@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Route, Switch} from "react-router";
+import {BrowserRouter as Router} from 'react-router-dom';
 import {withStyles} from '@material-ui/styles';
 import ShowBooks from './containers/ShowBooks';
 import ShowBasket from './containers/ShowBasket';
@@ -44,22 +45,24 @@ class App extends Component {
                 <div>
                     {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-                    <Switch>
-                        <Route path={"/books"}>
-                            <ShowBooks.SearchAppBar/>
-                            <ShowBooks.BookList/>
-                        </Route>
-                        <Route path={"/book/:id"} component={DetailsPage}/>
-                        <Route path={"/basket"}>
-                            <div>
+                    <Router location={'/'}>
+                        <Switch>
+                            <Route path={"/books"}>
                                 <ShowBooks.SearchAppBar/>
-                                <ShowBasket.Basket/>
-                            </div>
-                        </Route>
-                        <Route path={"/"}>
-                            <ShowBooks.SearchAppBar/>
-                        </Route>
-                    </Switch>
+                                <ShowBooks.BookList/>
+                            </Route>
+                            <Route path={"/book/:id"} component={DetailsPage}/>
+                            <Route path={"/basket"}>
+                                <div>
+                                    <ShowBooks.SearchAppBar/>
+                                    <ShowBasket.Basket/>
+                                </div>
+                            </Route>
+                            <Route path={"/"} component={ShowBooks.SearchAppBar}>
+                                <ShowBooks.SearchAppBar/>
+                            </Route>
+                        </Switch>
+                    </Router>
                 </div>
             </div>
         );

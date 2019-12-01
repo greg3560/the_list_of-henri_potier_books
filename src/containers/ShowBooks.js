@@ -10,7 +10,6 @@ import * as BookActions from '../actions/RequestAPIAction';
 import * as BasketActions from '../actions/BasketAction';
 import SearchAppBar from '../components/SearchAppBar';
 import BookList from '../components/BookList';
-import TemporaryDrawer from '../components/TemporaryDrawer';
 
 // apply the action to the UI
 

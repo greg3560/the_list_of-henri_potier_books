@@ -28,14 +28,14 @@ function SpanningTableRender(props) {
     const generateOffersCells = () => {
         var stuff = [];
         for (let i = 0, c = propsParent.offer.length; i < c; i++) {
-            let typeOffer = dataView.offersPossibility[dataView.indexBestOffer]['value' + i];
+            let typeOffer = dataView.offersPossibilities[dataView.indexBestOffer]['value' + i];
             switch (typeOffer) {
                 case 'percentage':
                     stuff.push((
                         <TableRow>
                             <TableCell>Remise</TableCell>
                             <TableCell align="right">{`${(dataView.discountRate * 100).toFixed(0)} %`}</TableCell>
-                            <TableCell align="right">{ccyFormat(dataView.offersPossibility[dataView.indexBestOffer].data[i])}</TableCell>
+                            <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].data[i])}</TableCell>
                         </TableRow>
                     ));
                     break;
@@ -44,7 +44,7 @@ function SpanningTableRender(props) {
                         <TableRow>
                             <TableCell>tranche</TableCell>
                             <TableCell align="right">{`${dataView.sliceValue} €/ ${dataView.slice} € d'achats`}</TableCell>
-                            <TableCell align="right">{ccyFormat(dataView.offersPossibility[dataView.indexBestOffer].data[i])}</TableCell>
+                            <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].data[i])}</TableCell>
                         </TableRow>
                     ));
                     break;
@@ -53,7 +53,7 @@ function SpanningTableRender(props) {
                         <TableRow>
                             <TableCell>Déduction</TableCell>
                             <TableCell align="right"/>
-                            <TableCell align="right">{ccyFormat(dataView.offersPossibility[dataView.indexBestOffer].data[i])}</TableCell>
+                            <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].data[i])}</TableCell>
                         </TableRow>
                     ));
                     break;
@@ -62,7 +62,7 @@ function SpanningTableRender(props) {
         stuff.push((
             <TableRow>
                 <TableCell colSpan={2}>Total</TableCell>
-                <TableCell align="right">{ccyFormat(dataView.offersPossibility[dataView.indexBestOffer].result)}</TableCell>
+                <TableCell align="right">{ccyFormat(dataView.offersPossibilities[dataView.indexBestOffer].result)}</TableCell>
             </TableRow>
         ));
         return stuff;

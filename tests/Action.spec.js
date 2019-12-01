@@ -1,9 +1,6 @@
 import * as types from '../src/constants/ActionTypes';
 import * as actions from '../src/actions/RequestAPIAction';
 import * as actionsBasket from '../src/actions/BasketAction';
-import { expect } from 'chai';
-
-// let expect = chai.expect;
 
 let data = [
     {

@@ -17,6 +17,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Link} from "react-router-dom";
 import * as url from '../constants/App';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -107,3 +108,7 @@ export default function BookCard(book) {
         </Card>
     );
 }
+
+BookCard.propTypes = {
+    book: PropTypes.object.isRequired,
+};

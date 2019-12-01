@@ -1,9 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import SpanningTableRender from './SpanningTableRender';
 
-var offersPossibility = [];
-
-const invoiceTaxes = (value, discountRate) => discountRate * value;
+const invoicePercentage = (value, discountRate) => discountRate * value;
 
 function priceRow(qty, unit) {
     return qty * unit;
@@ -17,25 +15,23 @@ function createRow(desc, qty, unit) {
 const deductionPerPurchaseTranche = (slice, sliceValue, invoiceTotal) =>
     Math.floor(invoiceTotal / slice) * sliceValue;
 
-
 function subtotal(items) {
     return items.map(({price}) => price).reduce((sum, i) => sum + i, 0);
 }
 
 // Generate the permutation for a given n (amount of elements) and a given array
-function generate(n, arr) {
-    // If only 1 element, just output the array
+function getPermutation(n, arr, callback) {
+    // If only 1 element, just export arr with callback
     if (n === 1) {
         let pattern = {};
         for (let i = 0, c = arr.length; i < c; i++) {
             pattern['value' + i] = arr[i];
         }
-        offersPossibility.push(pattern);
-        return;
+        callback(pattern);
     }
 
-    for (var i = 0; i < n; i += 1) {
-        generate(n - 1, arr);
+    for (var i = 0; i < n; i ++) {
+        getPermutation(n - 1, arr, callback);
 
         // If n is even
         if (n % 2 === 0) {
@@ -52,7 +48,7 @@ function swap(arr, idxA, idxB) {
     arr[idxB] = tmp;
 }
 
-const searchIndexBestOffer = (array) => {
+export const searchIndexBestOffer = (array) => {
     let indexBestOffer;
     let min = null;
     for (var i = 0, c = array.length; i < c; i++) {
@@ -69,53 +65,66 @@ const searchIndexBestOffer = (array) => {
     return indexBestOffer;
 };
 
-const getValueOfferPercentage = (dataView, resultForEachOffers, count) => {
+export const getValueOfferPercentage = (dataView, resultForEachOffers, count) => {
     let result;
-    if (count === 0) return invoiceTaxes(dataView.invoiceSubtotal, dataView.discountRate);
-    else {
-        for (let i = 0; i < resultForEachOffers.length; i++) {
-            if (i === 0) result = dataView.invoiceSubtotal - resultForEachOffers[i];
-            else result -= resultForEachOffers[i];
-        }
-        return invoiceTaxes(result, dataView.discountRate);
+    if (count === 0) {
+        result = invoicePercentage(dataView.invoiceSubtotal, dataView.discountRate);
     }
-};
-
-const getValueOfferSlice = (dataView, resultForEachOffers, count) => {
-    let result;
-    if (count === 0) result = deductionPerPurchaseTranche(dataView.slice, dataView.sliceValue, dataView.invoiceSubtotal);
     else {
         for (let i = 0; i < resultForEachOffers.length; i++) {
             if (i === 0) {
                 result = dataView.invoiceSubtotal - resultForEachOffers[i];
-            } else result -= resultForEachOffers[i];
+                continue;
+            }
+            result -= resultForEachOffers[i];
+        }
+        result = invoicePercentage(result, dataView.discountRate);
+    }
+    return result;
+};
+
+export const getValueOfferSlice = (dataView, resultForEachOffers, count) => {
+    let result;
+    if (count === 0) {
+        result = deductionPerPurchaseTranche(dataView.slice, dataView.sliceValue, dataView.invoiceSubtotal);
+    }
+    else {
+        for (let i = 0; i < resultForEachOffers.length; i++) {
+            if (i === 0) {
+                result = dataView.invoiceSubtotal - resultForEachOffers[i];
+                continue;
+            }
+            result -= resultForEachOffers[i];
         }
         result = deductionPerPurchaseTranche(dataView.slice, dataView.sliceValue, result);
     }
     return result;
 };
 
-const getresulTotalPerOffer = (resultForEachOffers, dataView) => {
+export const getResulTotalPerOffer = (resultForEachOffers, dataView) => {
     let resultTotalPerOffer;
     for (let i = 0, c = resultForEachOffers.length; i < c; i++) {
-        if (i === 0) resultTotalPerOffer = dataView.invoiceSubtotal - resultForEachOffers[i];
-        else resultTotalPerOffer -= resultForEachOffers[i];
+        if (i === 0) {
+            resultTotalPerOffer = dataView.invoiceSubtotal - resultForEachOffers[i];
+            continue;
+        }
+        resultTotalPerOffer -= resultForEachOffers[i];
     }
     return resultTotalPerOffer;
 };
 
-const getIndexBestOffer = (dataView) => {
+export const getResultForAllOffer = (dataView) => {
     let resultForEachOffers = [];
     let resultsByPossibility = [];
-    let indexBestOffer;
-    for (let i = 0, c = offersPossibility.length; i < c; i++) {
+    let resultsPerOffer = [];
+    for (let i = 0, c = dataView.offersPossibilities.length; i < c; i++) {
         let count = 0;
         resultForEachOffers = [];
         let result = 0;
-        for (var prop in offersPossibility[i]) {
+        for (var prop in dataView.offersPossibilities[i]) {
 
-            if (offersPossibility[i].hasOwnProperty(prop)) {
-                switch (offersPossibility[i][prop]) {
+            if (dataView.offersPossibilities[i].hasOwnProperty(prop)) {
+                switch (dataView.offersPossibilities[i][prop]) {
                     case 'percentage':
                         result = getValueOfferPercentage(dataView, resultForEachOffers, count);
                         break;
@@ -127,37 +136,25 @@ const getIndexBestOffer = (dataView) => {
                         break;
                     // TODO spinner
                 }
-                if (result !== 0) resultForEachOffers.push(result);
+                resultForEachOffers.push(result);
                 count++;
             }
         }
-        offersPossibility[i].data = resultForEachOffers;
-
-        let resultTotalPerOffer = getresulTotalPerOffer(offersPossibility[i].data, dataView);
+        let resultTotalPerOffer = getResulTotalPerOffer(resultForEachOffers, dataView);
         resultsByPossibility.push(resultTotalPerOffer);
-        indexBestOffer = searchIndexBestOffer(resultsByPossibility);
-        offersPossibility[i].result = resultsByPossibility[i];
+        resultsPerOffer.push(resultsByPossibility[i]);
+
+        dataView.offersPossibilities[i].result = resultsByPossibility[i];
+        dataView.offersPossibilities[i].data = resultForEachOffers;
     }
-    return indexBestOffer;
+    return resultsPerOffer;
 };
 
 function SpanningTable(props) {
-    useEffect(() => {
-        return () => {
-            console.log('will unmount');
-            offersPossibility = [];
-        };
-    }, []);
-    useEffect(() => {
-        console.log('mounted');
-        offersPossibility = [];
-    });
     let dataView = {
         rows: [],
-        offersPossibility: []
-
+        offersPossibilities: []
     };
-
     props.bookInBasket.forEach((item) => dataView.rows.push(createRow(item.title, 1, item.price)));
     dataView.invoiceSubtotal = subtotal(dataView.rows);
 
@@ -182,14 +179,17 @@ function SpanningTable(props) {
     });
 
     // Get the permutations
-    generate(offers.length, offers);
-    dataView.indexBestOffer = getIndexBestOffer(dataView);
-    dataView.offersPossibility = offersPossibility;
+    getPermutation(offers.length, offers, (arr) => {
+        dataView.offersPossibilities.push(arr);
+    });
+
+    let arrayOffers = getResultForAllOffer(dataView);
+
+    dataView.indexBestOffer = searchIndexBestOffer(arrayOffers);
 
     return (
         <SpanningTableRender propsParent={props} dataView={dataView}/>
     );
-
 }
 
 export default SpanningTable;
