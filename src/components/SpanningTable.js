@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SpanningTableRender from './SpanningTableRender';
 import PropTypes from "prop-types";
 
@@ -8,16 +8,20 @@ function priceRow(qty, unit) {
     return qty * unit;
 }
 
-function createRow(desc, qty, unit) {
+function createRow(desc, qty, unit, isbn) {
     const price = priceRow(qty, unit);
-    return {desc, qty, unit, price};
+    return {desc, qty, unit, price, isbn};
 }
 
 const deductionPerPurchaseTranche = (slice, sliceValue, invoiceTotal) =>
     Math.floor(invoiceTotal / slice) * sliceValue;
 
+// function subtotal(items) {
+//     return items.map((item) => item.price * item.qty).reduce((sum, i) => sum + i, 0);
+// }
+
 function subtotal(items) {
-    return items.map(({price}) => price).reduce((sum, i) => sum + i, 0);
+    return items.map(({unit, qty}) => unit * qty).reduce((sum, i) => sum + i, 0);
 }
 
 // Generate the permutation for a given n (amount of elements) and a given array
@@ -152,12 +156,22 @@ export const getResultForAllOffer = (dataView) => {
 };
 
 function SpanningTable(props) {
+    const handleChangeQuantity = (e) => {
+        props.handleStuff(e);
+    };
     const {bookInBasket, offer } = props;
     let dataView = {
         rows: [],
         offersPossibilities: []
     };
-    bookInBasket.forEach((item) => dataView.rows.push(createRow(item.title, 1, item.price)));
+
+    bookInBasket.forEach((item) => {
+        let qty = 1;
+        if (item.isbn === props.qty.isbn) {
+            qty = parseInt(props.qty.nbre);
+        }
+        dataView.rows.push(createRow(item.title, qty, item.price, item.isbn))
+    });
     dataView.invoiceSubtotal = subtotal(dataView.rows);
 
     let offers = [];
@@ -190,7 +204,7 @@ function SpanningTable(props) {
     dataView.indexBestOffer = searchIndexBestOffer(arrayOffers);
 
     return (
-        <SpanningTableRender propsParent={props} dataView={dataView}/>
+        <SpanningTableRender propsParent={props} dataView={dataView} handleChangeQuantity={handleChangeQuantity}/>
     );
 }
 

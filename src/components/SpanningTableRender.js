@@ -7,7 +7,7 @@ import TableBody from "@material-ui/core/TableBody";
 import React from "react";
 import {makeStyles} from "@material-ui/core";
 import PropTypes from "prop-types";
-import SpanningTable from "./SpanningTable";
+import TextField from '@material-ui/core/TextField';
 
 function ccyFormat(num) {
     return `${num.toFixed(2)}`;
@@ -23,10 +23,13 @@ const useStyles = makeStyles(theme => ({
     table: {
         minWidth: 700,
     },
+    textField: {
+        width: '20%'
+    }
 }));
 
 function SpanningTableRender(props) {
-    const {propsParent, dataView } = props;
+    const {propsParent, dataView, handleChangeQuantity } = props;
     const classes = useStyles();
     const generateOffersCells = () => {
         let cells = [];
@@ -83,10 +86,26 @@ function SpanningTableRender(props) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dataView.rows.map(row => (
+                    {dataView.rows.map((row, {isbn}) => (
                         <TableRow key={row.desc}>
                             <TableCell>{row.desc}</TableCell>
-                            <TableCell align="right">{row.qty}</TableCell>
+                            <TableCell align="right">
+                                <TextField
+                                    id="standard-number"
+                                    // placeholder={row.qty}
+                                    type="number"
+                                    className={classes.textField}
+                                    InputLabelProps={{
+                                        shrink: true
+                                    }}
+                                    inputProps={{
+                                        isbn: row.isbn
+                                    }}
+                                    margin="normal"
+                                    onChange={handleChangeQuantity}
+                                    defaultValue={row.qty}
+                                />
+                            </TableCell>
                             <TableCell align="right">{row.unit}</TableCell>
                             <TableCell align="right">{ccyFormat(row.price)}</TableCell>
                         </TableRow>
@@ -106,6 +125,7 @@ function SpanningTableRender(props) {
 SpanningTableRender.propTypes = {
     propsParent: PropTypes.object.isRequired,
     dataView: PropTypes.object.isRequired,
+    handleChangeQuantity: PropTypes.func.isRequired,
 };
 
 export default SpanningTableRender;
