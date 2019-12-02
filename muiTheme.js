@@ -1,4 +1,4 @@
-import {createMuiTheme} from "material-ui/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
     "breakpoints": {
@@ -159,7 +159,7 @@ const theme = createMuiTheme({
     },
     "shape": { "borderRadius": 4 },
     "props": {},
-    "spacing": { "unit": 8 },
+    "spacing": 4,
     "palette": {
         "tonalOffset": 0.2,
         "background": { "paper": "#fff", "default": "#fafafa" },

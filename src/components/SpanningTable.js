@@ -153,7 +153,6 @@ export const getResultForAllOffer = (dataView) => {
 
 function SpanningTable(props) {
     const {bookInBasket, offer } = props;
-    console.log('props', props);
     let dataView = {
         rows: [],
         offersPossibilities: []

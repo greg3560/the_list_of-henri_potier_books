@@ -4,16 +4,20 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {withStyles} from '@material-ui/styles';
 import ShowBooks from './containers/ShowBooks';
 import ShowBasket from './containers/ShowBasket';
+import ShowDetailsBook from './containers/ShowDetailsBook';
+import Footer from './components/Footer';
 import {connect} from 'react-redux';
 import cookie from 'react-cookies'
 import {bindActionCreators} from "redux";
 import * as BasketActions from "./actions/BasketAction";
-import './components/styles/normalize.css';
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 
 const styles = {
-    root: {},
+    root: {
+        marginTop: '3rem'
+    },
 };
 
 class App extends Component {
@@ -43,7 +47,7 @@ class App extends Component {
 
         const {classes} = this.props;
         return (
-            <Grid className={classes.root}>
+            <div className={classes.root}>
                 <Grid container direction={'row'} justify={'space-around'}>
                     {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
@@ -53,11 +57,26 @@ class App extends Component {
                                 <Grid item xs={12}>
                                     <ShowBooks.SearchAppBar/>
                                 </Grid>
-                                <Grid item xs={10}>
+                                <Grid item xs={9}>
                                     <ShowBooks.BookList/>
                                 </Grid>
+                                <Footer/>
                             </Route>
-                            <Route path={"/book/:id"} component={DetailsPage}/>
+                            <Route
+                                path={"/book/:id"}
+                                children={({match}) => (
+                                    <Grid container direction={'row'} justify={'space-around'}>
+                                        <Grid item xs={12}>
+                                            <ShowBooks.SearchAppBar/>
+                                        </Grid>
+                                        <Grid item xs={9}>
+                                            <ShowDetailsBook.DetailsPage match={match}/>
+                                        </Grid>
+                                        <Footer/>
+                                    </Grid>
+                                )}
+                            />
+
                             <Route path={"/basket"}>
                                 <Grid item xs={12}>
                                     <ShowBooks.SearchAppBar/>
@@ -65,29 +84,24 @@ class App extends Component {
                                 <Grid item xs={10}>
                                     <ShowBasket.Basket/>
                                 </Grid>
+                                <Footer/>
                             </Route>
                             <Route path={"/"} component={ShowBooks.SearchAppBar}>
                                 <Grid item xs={12}>
                                     <ShowBooks.SearchAppBar/>
-                                </Grid>>
+                                    <Typography variant="h2" component="h2" align={'center'}>
+                                        La bibliothèque de Henri Potier
+                                    </Typography>
+                                </Grid>
                             </Route>
                         </Switch>
                     </Router>
                 </Grid>
-            </Grid>
-        );
-    }
-}
-
-class DetailsPage extends Component {
-    render() {
-        return (
-            <div>
-                <h2>{this.props.match.params.id}</h2>
             </div>
         );
     }
 }
+
 
 const mapStateToProps = (state) => {
     return ({

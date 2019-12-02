@@ -1,7 +1,14 @@
 import React from 'react';
 import BookCard from './BookCard';
-import BallSpinner from "../icon/BallSpinner";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
+import {withStyles} from "@material-ui/core";
+
+const styles = {
+    root: {
+        marginBottom: '2rem'
+    },
+};
 
 class BookList extends React.Component {
     constructor(props) {
@@ -16,8 +23,16 @@ class BookList extends React.Component {
     };
 
     render() {
+        const {classes} = this.props;
         return (
-            <Grid container spacing={5} direction={'row'} justify={'space-between'} alignItems={'stretch'}>
+            <Grid
+                container
+                spacing={5}
+                direction={'row'}
+                justify={'space-between'}
+                alignItems={'stretch'}
+                className={classes.root}
+            >
                 {this.props.data.length > 0 && this.props.data.map((book, index) => {
                     return <BookCard
                         key={index}
@@ -26,10 +41,10 @@ class BookList extends React.Component {
                         basketList={this.props.basketList}
                     />;
                 })}
-                {/*{this.props.data.length === 0 && <BallSpinner/>}*/}
+                {this.props.data.length === 0 && <CircularProgress color="secondary" />}
             </Grid>
         );
     }
 }
 
-export default BookList;
+export default withStyles(styles)(BookList);

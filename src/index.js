@@ -8,6 +8,9 @@ import reducer from './reducers';
 import {createBrowserHistory} from "history";
 import {BrowserRouter as Router} from "react-router-dom";
 import {CookiesProvider} from 'react-cookie';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import theme from '../muiTheme';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const history = createBrowserHistory();
 
@@ -37,7 +40,10 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={history}>
             <CookiesProvider>
-                <App/>
+                <CssBaseline/>
+                <MuiThemeProvider theme={theme}>
+                    <App/>
+                </MuiThemeProvider>
             </CookiesProvider>
         </Router>
     </Provider>,

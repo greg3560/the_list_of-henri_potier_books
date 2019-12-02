@@ -11,14 +11,11 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import {red} from '@material-ui/core/colors';
-import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {Link} from "react-router-dom";
 import * as url from '../constants/App';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import PropTypes from 'prop-types';
-import SpanningTableRender from "./SpanningTableRender";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles(theme => ({
@@ -69,11 +66,6 @@ function BookCard(props) {
                             {title[0]}
                         </Avatar>
                     }
-                    action={
-                        <IconButton aria-label="settings">
-                            <MoreVertIcon/>
-                        </IconButton>
-                    }
                     title={title}
                     subheader={price + ' euros'}
                 />
@@ -89,9 +81,6 @@ function BookCard(props) {
                     <IconButton aria-label="add to favorites" isbn={isbn} onClick={toggleBasket}>
                         {basketChecked ? <AddShoppingCartIcon color="primary"/> : <AddShoppingCartIcon/>}
                     </IconButton>
-                    <IconButton aria-label="share">
-                        <ShareIcon/>
-                    </IconButton>
                     <IconButton
                         className={clsx(classes.expand, {
                             [classes.expandOpen]: expanded,
@@ -105,7 +94,7 @@ function BookCard(props) {
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        {synopsis}
+                        {synopsis[0]}
                     </CardContent>
                 </Collapse>
             </Card>
