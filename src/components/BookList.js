@@ -8,6 +8,10 @@ const styles = {
     root: {
         marginBottom: '2rem'
     },
+    spinner: {
+        left: '50%',
+        position: 'absolute'
+    }
 };
 
 class BookList extends React.Component {
@@ -41,7 +45,7 @@ class BookList extends React.Component {
                         basketList={this.props.basketList}
                     />;
                 })}
-                {this.props.data.length === 0 && <CircularProgress color="secondary" />}
+                {this.props.data.length === 0 && <CircularProgress className={classes.spinner} color="secondary" />}
             </Grid>
         );
     }

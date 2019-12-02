@@ -1,5 +1,4 @@
 import React from 'react';
-import './styles/Book.css';
 import {makeStyles} from '@material-ui/core/styles';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';

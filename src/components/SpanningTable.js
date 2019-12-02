@@ -16,10 +16,6 @@ function createRow(desc, qty, unit, isbn) {
 const deductionPerPurchaseTranche = (slice, sliceValue, invoiceTotal) =>
     Math.floor(invoiceTotal / slice) * sliceValue;
 
-// function subtotal(items) {
-//     return items.map((item) => item.price * item.qty).reduce((sum, i) => sum + i, 0);
-// }
-
 function subtotal(items) {
     return items.map(({unit, qty}) => unit * qty).reduce((sum, i) => sum + i, 0);
 }
@@ -157,7 +153,7 @@ export const getResultForAllOffer = (dataView) => {
 
 function SpanningTable(props) {
     const handleChangeQuantity = (e) => {
-        props.handleStuff(e);
+        props.handleUpdateQuantity(e);
     };
     const {bookInBasket, offer } = props;
     let dataView = {
@@ -211,6 +207,8 @@ function SpanningTable(props) {
 SpanningTable.propTypes = {
     bookInBasket: PropTypes.array.isRequired,
     offer: PropTypes.array.isRequired,
+    handleUpdateQuantity: PropTypes.func.isRequired,
+    qty: PropTypes.object.isRequired
 };
 
 export default SpanningTable;

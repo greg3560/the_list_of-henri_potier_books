@@ -1,5 +1,4 @@
 import React from 'react';
-import './styles/Book.css';
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -67,7 +66,7 @@ function BookCard(props) {
                         </Avatar>
                     }
                     title={title}
-                    subheader={price + ' euros'}
+                    subheader={price + ' €'}
                 />
                 <CardMedia
                     className={classes.media}

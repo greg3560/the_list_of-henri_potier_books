@@ -5,7 +5,6 @@ import {withStyles} from '@material-ui/styles';
 import ShowBooks from './containers/ShowBooks';
 import ShowBasket from './containers/ShowBasket';
 import ShowDetailsBook from './containers/ShowDetailsBook';
-import Footer from './components/Footer';
 import {connect} from 'react-redux';
 import cookie from 'react-cookies'
 import {bindActionCreators} from "redux";
@@ -24,7 +23,7 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        let cookies = cookie.load('basket');
+        let cookies = cookie.load('basket'); // load basket
         if (typeof cookies !== 'undefined' && cookies.length > 0) {
             cookies.map((item) => {
                 this.props.basket.addBasket(item);
@@ -35,7 +34,7 @@ class App extends Component {
     componentDidUpdate() {
         const expires = new Date();
         expires.setDate(Date.now() + 60 * 60 * 24 * 14); // destruction in 15 days
-        cookie.save('basket', this.props.state.basket.basket, {
+        cookie.save('basket', this.props.state.basket.basket, { // save basket
             path: '/',
             expires,
             maxAge: 1000
@@ -60,7 +59,6 @@ class App extends Component {
                                 <Grid item xs={9}>
                                     <ShowBooks.BookList/>
                                 </Grid>
-                                <Footer/>
                             </Route>
                             <Route
                                 path={"/book/:id"}
@@ -72,7 +70,6 @@ class App extends Component {
                                         <Grid item xs={9}>
                                             <ShowDetailsBook.DetailsPage match={match}/>
                                         </Grid>
-                                        <Footer/>
                                     </Grid>
                                 )}
                             />
@@ -84,7 +81,6 @@ class App extends Component {
                                 <Grid item xs={10}>
                                     <ShowBasket.Basket/>
                                 </Grid>
-                                <Footer/>
                             </Route>
                             <Route path={"/"} component={ShowBooks.SearchAppBar}>
                                 <Grid item xs={12}>
