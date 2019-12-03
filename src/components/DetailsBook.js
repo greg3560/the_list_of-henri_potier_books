@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import DetailsBookRender from './DetailsBookRender';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
+import PropTypes from "prop-types";
 
 class DetailsBook extends Component {
     constructor(props) {
@@ -10,9 +11,9 @@ class DetailsBook extends Component {
     }
 
     componentDidMount() {
-        let book = this.props.data.filter((book, index) => book.isbn === this.props.match.params.id);
+        let book = this.props.data.filter((book) => book.isbn === this.props.match.params.id);
         let isbn = book.isbn;
-        this.setState({basketChecked: this.props.basketList.indexOf(isbn) !== -1})
+        this.setState({basketChecked: this.props.basketList.indexOf(isbn) !== -1});
     }
 
     handleClickBasket = (e, basketChecked) => { // toggle add/delete item
@@ -37,5 +38,14 @@ class DetailsBook extends Component {
         );
     }
 }
+
+DetailsBook.propTypes = {
+    classes: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    basket: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
+    basketList: PropTypes.array.isRequired,
+};
 
 export default DetailsBook;

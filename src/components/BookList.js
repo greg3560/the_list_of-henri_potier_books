@@ -3,6 +3,7 @@ import BookCard from './BookCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import {withStyles} from "@material-ui/core";
+import PropTypes from "prop-types";
 
 const styles = {
     root: {
@@ -18,7 +19,7 @@ class BookList extends React.Component {
     constructor(props) {
         super(props);
         this.props.actions.fetchBooks();
-    };
+    }
 
     handleClickBasket = (e, basketChecked) => { // toggle add/delete item
         let isbn = e.currentTarget.getAttribute("isbn");
@@ -50,5 +51,14 @@ class BookList extends React.Component {
         );
     }
 }
+
+BookList.propTypes = {
+    classes: PropTypes.object.isRequired,
+    basket: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired,
+    handleClickBasket: PropTypes.func,
+    data: PropTypes.array.isRequired,
+    basketList: PropTypes.array.isRequired,
+};
 
 export default withStyles(styles)(BookList);

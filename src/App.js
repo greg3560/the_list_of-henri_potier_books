@@ -6,12 +6,12 @@ import ShowBooks from './containers/ShowBooks';
 import ShowBasket from './containers/ShowBasket';
 import ShowDetailsBook from './containers/ShowDetailsBook';
 import {connect} from 'react-redux';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 import {bindActionCreators} from "redux";
 import * as BasketActions from "./actions/BasketAction";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-
+import PropTypes from "prop-types";
 
 const styles = {
     root: {
@@ -22,7 +22,6 @@ const styles = {
 class App extends Component {
     constructor(props) {
         super(props);
-
         let cookies = cookie.load('basket'); // load basket
         if (typeof cookies !== 'undefined' && cookies.length > 0) {
             cookies.map((item) => {
@@ -108,5 +107,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     basket: bindActionCreators(BasketActions, dispatch),
 });
+
+// check the props
+App.propTypes = {
+    basket: PropTypes.object.isRequired,
+    state: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App));

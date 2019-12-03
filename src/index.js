@@ -5,14 +5,10 @@ import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import reducer from './reducers';
-import {createBrowserHistory} from "history";
 import {BrowserRouter as Router} from "react-router-dom";
-import {CookiesProvider} from 'react-cookie';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../muiTheme';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-
-const history = createBrowserHistory();
+import {MuiThemeProvider} from '@material-ui/core/styles';
 
 
 /* Redux DevTools Extension */
@@ -38,13 +34,11 @@ const store = createStore(reducer, enhancer);
 // display of the React element or its update
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={history}>
-            <CookiesProvider>
-                <CssBaseline/>
-                <MuiThemeProvider theme={theme}>
-                    <App/>
-                </MuiThemeProvider>
-            </CookiesProvider>
+        <Router>
+            <CssBaseline/>
+            <MuiThemeProvider theme={theme}>
+                <App/>
+            </MuiThemeProvider>
         </Router>
     </Provider>,
     document.getElementById('root'),

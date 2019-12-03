@@ -1,9 +1,8 @@
 import React from 'react';
 import SpanningTable from './SpanningTable';
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
-import {connect} from "react-redux";
 import {withStyles} from "@material-ui/styles";
+import PropTypes from "prop-types";
 
 const styles = {
     root: {
@@ -57,5 +56,15 @@ class BookList extends React.Component {
         );
     }
 }
+
+// check the props
+BookList.propTypes = {
+    dataOffers: PropTypes.array.isRequired,
+    basketList: PropTypes.array.isRequired,
+    data: PropTypes.array.isRequired,
+    classes: PropTypes.object.isRequired,
+    offersActions: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
+};
 
 export default withStyles(styles)(BookList);

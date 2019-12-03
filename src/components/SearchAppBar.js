@@ -147,8 +147,10 @@ class SearchAppBar extends React.Component {
         this.props.data.map((item, index) => {
             let isInArray = false;
             for (let data in dataAutoComplete[index]) {
-                if (data === 'title') {
-                    if (dataAutoComplete[index][data] === item.title) isInArray = true;
+                if (Object.prototype.hasOwnProperty.call(dataAutoComplete[index], data)) {
+                    if (data === 'title') {
+                        if (dataAutoComplete[index][data] === item.title) isInArray = true;
+                    }
                 }
             }
             if (!isInArray) dataAutoComplete.push(item);
@@ -204,6 +206,7 @@ class SearchAppBar extends React.Component {
 }
 
 SearchAppBar.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired
 };
 export default withStyles(styles)(SearchAppBar);

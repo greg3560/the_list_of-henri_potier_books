@@ -86,7 +86,7 @@ function SpanningTableRender(props) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dataView.rows.map((row, {isbn}) => (
+                    {dataView.rows.map((row) => (
                         <TableRow key={row.desc}>
                             <TableCell>{row.desc}</TableCell>
                             <TableCell align="right">
