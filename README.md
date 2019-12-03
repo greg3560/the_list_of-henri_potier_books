@@ -5,7 +5,7 @@ install React, Babel, Webpack with his configuration from scratch.
 ## Table of Contents
 
 * [App](#App)
-* [Redux et React Redux](#Redux_et React_Redux)
+* [Redux et React Redux](#Redux)
 * [Hooks](#Hooks)
 * [Api](#Api)
 * [Use case](#Use_case)
